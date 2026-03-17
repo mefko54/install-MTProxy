@@ -5,17 +5,14 @@
 # chmod +x ./telemt-from-image.sh
 # ./telemt-from-image.sh
 
-# --- docker images:     --------------------------------------------
-# 1
-# Distroless build of https://github.com/telemt/telemt by whn0thacked
+# --- Docker images:     --------------------------------------------
+# 1 # Distroless build of https://github.com/telemt/telemt by whn0thacked
 IMAGE_NAME="whn0thacked/telemt-docker:latest" # https://github.com/An0nX/telemt-docker/blob/master/README.md
 
-# 2
-# Distroless build of https://github.com/telemt/telemt by whn0thacked (Copy)
+# 2 # Distroless build of https://github.com/telemt/telemt by whn0thacked (Copy at 2026-02)
 # IMAGE_NAME="exalon/telemt-docker:latest"  # https://hub.docker.com/repository/docker/exalon/telemt-docker/general
 
-# 3
-# new Distroless build of https://github.com/telemt/telemt 
+# 3 # new Distroless build of https://github.com/telemt/telemt 
 # IMAGE_NAME="exalon/telemt:latest"  # https://hub.docker.com/repository/docker/exalon/telemt/general
 # --------------------------------------------------------------------
 
@@ -107,14 +104,11 @@ check_and_install() {
     # 1. Ask for permission
     info "This script can check & install dependencies (Update, Docker, Compose, OpenSSL, lsof)"
     echo -ne "${YELLOW}[?] Press [ENTER] to check/install or ANY OTHER KEY to skip: ${NC}"
-    read -n 1 -s REPLY
-    echo "" # New line after key press
+    IFS= read -n 1 -s REPLY
+    echo "" 
 
-    #rem#
-    # If NOT an empty string (i.e., not ENTER), skip installation
-    if [[ -n $REPLY ]]; then
-    info "Dependency check skipped by user"
-      #  touch .setup_done
+    if [[ -n "$REPLY" ]]; then
+        info "Dependency check skipped by user"
         return 0
     fi
 
@@ -132,8 +126,12 @@ check_and_install() {
         echo -e "${GREEN}Found${NC}"
     else
         echo -e "${YELLOW}Installing...${NC}"
-        curl -fsSL https://get.docker.com | sh >/dev/null 2>&1
-        systemctl enable --now docker >/dev/null 2>&1
+        if curl -fsSL https://get.docker.com | sh >/dev/null 2>&1; then
+            systemctl enable --now docker >/dev/null 2>&1
+        else
+            err "Failed to install Docker."
+            exit 1 # Прерываем, если Docker не поставился
+        fi
     fi
 
     # 4. Docker Compose
@@ -142,8 +140,14 @@ check_and_install() {
         echo -e "${GREEN}Found${NC}"
     else
         echo -e "${YELLOW}Installing...${NC}"
-        apt-get install -y docker-compose-plugin >/dev/null 2>&1
+        if apt-get install -y docker-compose-plugin >/dev/null 2>&1; then
+            echo -e "${GREEN}Done${NC}"
+        else
+            err "Failed to install Docker Compose plugin."
+            exit 1
+        fi
     fi
+
 
     # 5. OpenSSL
     echo -ne "[>] Checking OpenSSL... "
@@ -151,18 +155,30 @@ check_and_install() {
         echo -e "${GREEN}Found${NC}"
     else
         echo -e "${YELLOW}Installing...${NC}"
-        apt-get install -y openssl >/dev/null 2>&1
+        if apt-get install -y openssl >/dev/null 2>&1; then
+            echo -e "${GREEN}Done${NC}"
+        else
+            echo -e "${RED}Failed${NC}"
+            err "Could not install OpenSSL. Check your package manager."
+            exit 1
+        fi
     fi
-    
+
     # 6. LSOF
     echo -ne "[>] Checking lsof... "
     if command -v lsof >/dev/null 2>&1; then
         echo -e "${GREEN}Found${NC}"
     else
         echo -e "${YELLOW}Installing...${NC}"
-        apt-get install -y lsof >/dev/null 2>&1
+        if apt-get install -y lsof >/dev/null 2>&1; then
+            echo -e "${GREEN}Done${NC}"
+        else
+            echo -e "${RED}Failed${NC}"
+            err "Could not install lsof."
+            exit 1 # Выход из скрипта при ошибке
+        fi
     fi
-    #   
+
     echo -e "\n${GREEN}[*] Environment is ready!${NC}"
     echo -ne "${YELLOW}[?] Press [ENTER] to continue...${NC}"
     read -r 
@@ -253,8 +269,9 @@ case $INSTALL_MODE in
         ;;
     4)
         warn "This will remove EVERYTHING related to Telemt"
-        read -p "[?] Are you sure? [ENTER] to confirm or type anything to cancel: " -r; echo
-        if [[ -z $REPLY ]]; then
+        read -p "[?] Are you sure? Press [ENTER] to confirm or type anything to cancel: " -r; echo
+        IFS= read -r REPLY
+        if [[ -z "$REPLY" ]]; then
             # 1. Remove rules from UFW (two lines: file check + actions)
             [ -f "$CONFIG_FILE" ] && { 
                 OLD_PORT=$(grep "port =" "$CONFIG_FILE" | awk -F'=' '{print $2}' | tr -d '[:space:]"')
@@ -286,8 +303,12 @@ if [ -f "$CONFIG_FILE" ]; then
     OLD_SECRET=$(grep "docker =" "$CONFIG_FILE" | awk -F'=' '{print $2}' | tr -d ' "')
     echo -e "${YELLOW}[?] Config found. Use existing secret? ($OLD_SECRET)${NC}"
     echo -e "${CYAN}    (Keeping the old secret will keep your current proxy link working)${NC}"
-    read -p "[?] [ENTER] to keep current, type anything for a NEW one: " -r
-    if [[ -z $REPLY ]]; then
+
+    echo -ne "[?] Press [ENTER] to keep current, type anything for a NEW one: "
+    IFS= read -n 1 -s REPLY
+    echo ""
+
+    if [[ -z "$REPLY" ]]; then
         SECRET=$OLD_SECRET
         info "Keeping existing secret."
     else
@@ -334,8 +355,6 @@ if command -v ufw >/dev/null && ufw status | grep -q "active"; then
     info "Opening port $PORT..."
     ufw allow "$PORT"/tcp
 fi
-
-
 
 # --- File Generation ---
 prepare_files
@@ -401,14 +420,12 @@ services:
 #        hard: 65536
 EOF
 
-# print_proxy_link "$PORT" "$SECRET"
-
 #  Execution 
 if [ "$OVERWRITE" = true ]; then
     deploy_container && { echo -e "\n🎉 Proxy is ready to use!"; }
 else
-    echo -ne "[?] 🚀 ${GREEN}Start now?${NC} [ENTER] to confirm: "
-    read -r REPLY
+    echo -ne "[?] 🚀 ${GREEN}Start now?${NC} Press [ENTER] to confirm: "
+    IFS= read -r REPLY
     [[ -z "$REPLY" ]] && deploy_container
 fi
 
