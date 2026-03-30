@@ -1,5 +1,5 @@
 #!/bin/bash
-
+echo "v0.1"
 # Distroless Image for Telemt - a fast Rust-based MTProxy (MTProto) server
 # Usage:
 # chmod +x ./telemt-from-image.sh
