@@ -201,13 +201,9 @@ check_and_install() {
 status_detection() {
     # 1. Check for the existence of the link file BEFORE checking Docker
     if [ -f "$PROXY_LINK_FILE" ]; then
-        local raw_link=$(head -n 1 "$PROXY_LINK_FILE")
-        EXISTING_LINK="LINK:${GREEN}$raw_link${NC}"
-        
-        # Count non-empty lines accurately
-        local line_count=$(grep -c "[^[:space:]]" "$PROXY_LINK_FILE")
-        # If more than 1 user exists, show the info message
-        if [ "$line_count" -gt 1 ]; then
+        mapfile -t links < <(grep "[^[:space:]]" "$PROXY_LINK_FILE")
+        EXISTING_LINK="LINK: ${GREEN}${links[0]}${NC}"
+        if [ "${#links[@]}" -gt 1 ]; then
             info "Additional user links found in $PROXY_LINK_FILE"
         fi
     else
