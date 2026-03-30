@@ -82,7 +82,7 @@ print_proxy_link() {
                      
             echo -e "additional user list"
             echo -e "$u_name 🔗 ${CYAN}$u_link${NC}"
-            echo -e "$u_name 🔗 ${CYAN}$u_link${NC}" >> "$PROXY_LINK_FILE"   
+            echo "$u_name: $u_link" >> "$PROXY_LINK_FILE"            
         done
     fi
     
