@@ -65,7 +65,7 @@ print_proxy_link() {
 
     echo -e "=========================================================="
     echo -e "Copy the link below to Telegram and click it to activate the proxy"
-    echo -e "🔗 ${CYAN}$link${NC}"
+    echo -e "Default 🔗 ${CYAN}$link${NC}"
     echo -e "=========================================================="
 
     # Extract all additional users from the config
@@ -79,10 +79,10 @@ print_proxy_link() {
             [[ "$u_name" == "docker" ]] && continue
             
             local u_link="tg://proxy?server=$ip&port=$p&secret=ee${u_secret}${domain_hex}"
-            echo "$u_link" >> "$PROXY_LINK_FILE"            
-            echo -e "----------------------------------------------------------"
-            echo -e "User: $u_name"
-            echo -e "🔗 ${CYAN}$u_link${NC}"
+                     
+            echo -e "additional user list"
+            echo -e "$u_name 🔗 ${CYAN}$u_link${NC}"
+            echo -e "$u_name 🔗 ${CYAN}$u_link${NC}" >> "$PROXY_LINK_FILE"   
         done
     fi
     
