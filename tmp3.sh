@@ -88,7 +88,8 @@ deploy_container() {
 
     # Download image
     info "Pulling latest image..."
-    docker compose pull && start_container || { err "Failed to deploy. Docker environment is not ready!"; exit 1; }
+    # docker compose pull && start_container || { err "Failed to deploy. Docker environment is not ready!"; exit 1; }
+    start_container || { err "Failed to deploy. Docker environment is not ready!"; exit 1; }
 }
 # Start container
 start_container() {
