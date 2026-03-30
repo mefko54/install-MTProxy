@@ -61,7 +61,7 @@ print_proxy_link() {
     local domain_hex=$(echo -n "$SITE" | od -A n -t x1 | tr -d ' \n')
     local full_secret="ee${s}${domain_hex}"    
     local link="tg://proxy?server=$ip&port=$p&secret=$full_secret"
-    echo "$link" > "$PROXY_LINK_FILE"   
+    echo "Default: $link" > "$PROXY_LINK_FILE"   
 
     echo -e "=========================================================="
     echo -e "Copy the link below to Telegram and click it to activate the proxy"
