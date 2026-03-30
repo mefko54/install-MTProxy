@@ -202,8 +202,7 @@ status_detection() {
     # 1. Check for the existence of the link file BEFORE checking Docker
     if [ -f "proxy_link.txt" ]; then        
         local raw_link=$(head -n 1 "$PROXY_LINK_FILE" | sed 's/.*tg:\/\//tg:\/\//')
-        EXISTING_LINK="LINK:${GREEN}$raw_link${NC}"	
-        info "Additional user links (if any) are in $PROXY_LINK_FILE"
+        EXISTING_LINK="LINK:${GREEN}$raw_link${NC}"	        
     else
         EXISTING_LINK="${YELLOW}⚠️ File $PROXY_LINK_FILE not found (Install first)${NC}"
     fi    
@@ -244,6 +243,7 @@ echo -e "${NC}Build from existing image: $IMAGE_NAME"
 main_menu() {
     echo -e "$DOCKER_INFO"
     [ -n "$EXISTING_LINK" ] && echo -e "$EXISTING_LINK"
+    info "Additional user links (if any) are in $PROXY_LINK_FILE"
     echo -e "\n\nSelect action: "
     echo -e "${NC}\nBuild from existing image: $IMAGE_NAME"
     echo -e " 1) ${CYAN}Fast Install             (Port: $PORT, Domain: $SITE)${NC}"
