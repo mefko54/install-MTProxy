@@ -205,7 +205,6 @@ status_detection() {
         #EXISTING_LINK="LINK:${GREEN}$raw_link${NC}"
         EXISTING_LINK="LINK: ${GREEN}$raw_link${NC}\n${GREEN}[INFO]${NC} Additional user links (if any) are in $PROXY_LINK_FILE"
     else
-    else
         #EXISTING_LINK="${YELLOW}⚠️ File proxy_link.txt not found (Install first)${NC}"
         EXISTING_LINK="${YELLOW}⚠️ File $PROXY_LINK_FILE not found (Install first)${NC}"
     fi  
