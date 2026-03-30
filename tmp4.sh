@@ -213,7 +213,11 @@ status_detection() {
     # 1. Check for the existence of the link file BEFORE checking Docker
     if [ -f "$PROXY_LINK_FILE" ]; then
         local raw_link=$(head -n 1 "$PROXY_LINK_FILE")
-        EXISTING_LINK="LINK:${GREEN}$raw_link${NC}"	
+        EXISTING_LINK="LINK:${GREEN}$raw_link${NC}"
+        # Check if there are more than 1 line (meaning additional users exist)
+        if [ "$(wc -l < "$PROXY_LINK_FILE")" -gt 1 ]; then
+            info "Additional user links found in $PROXY_LINK_FILE"
+        fi
     else
         EXISTING_LINK="${YELLOW}⚠️ File $PROXY_LINK_FILE not found (Install first)${NC}"
     fi
