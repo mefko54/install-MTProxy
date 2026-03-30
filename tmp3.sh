@@ -320,6 +320,33 @@ case $INSTALL_MODE in
     *) err "Invalid option."; exit 1 ;;
 esac
 
+# --- Proxy Secret: Keep Existing or New ---
+if [ -f "$CONFIG_FILE" ]; then
+    # Забираем основной секрет
+    OLD_SECRET=$(grep "docker =" "$CONFIG_FILE" | awk -F'=' '{print $2}' | tr -d ' "')
+    
+    echo -e "${YELLOW}[?] Config found. Use existing secrets? ($OLD_SECRET и др.)${NC}"
+    echo -e "${CYAN}    (This will restore ALL users and keep all existing links working)${NC}"
+
+    echo -ne "[?] Press [ENTER] to keep ALL, type anything for a NEW one: "
+    IFS= read -n 1 -s REPLY
+    echo ""
+
+    if [[ -z "$REPLY" ]]; then
+        SECRET=$OLD_SECRET
+        # ЗАБИРАЕМ ВСЕХ ОСТАЛЬНЫХ ПОЛЬЗОВАТЕЛЕЙ
+        USER_CONFIG=$(sed -n '/\[access.users\]/,$p' "$CONFIG_FILE" | grep "=" | grep -v "docker =" | sed 's/^/\n/')
+        info "All existing secrets restored."
+    else
+        SECRET=$(openssl rand -hex 16)
+        info "New secret generated: $SECRET"
+        warn "Note: All old proxy links will no longer work!"
+    fi
+else
+    SECRET=$(openssl rand -hex 16)
+    info "Generated secret: $SECRET"
+fi
+
 
 # --- Proxy Secret: Keep Existing or New---
 if [ -f "$CONFIG_FILE" ]; then
@@ -343,6 +370,7 @@ else
     SECRET=$(openssl rand -hex 16)
     info "Generated secret: $SECRET"
 fi
+
 
 # --- Custom setup parameters ---
 # - PORT: The TCP port the proxy listens on (verified via lsof)
