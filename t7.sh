@@ -236,7 +236,7 @@ gui_top() {
 echo -e "${GREEN}"
 echo "╔════════════════════════════════════════════════════╗"
 echo "║              MTProxy (Telemt) Installer            ║"
-echo "╚════════════════════════════════════════════════════╝"
+echo "╚════════════════════════════════════════════════════╝1"
 echo -e "${NC}Build from existing image: $IMAGE_NAME"
 }
 
