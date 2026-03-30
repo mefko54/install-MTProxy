@@ -202,9 +202,12 @@ status_detection() {
     # 1. Check for the existence of the link file BEFORE checking Docker
     if [ -f "$PROXY_LINK_FILE" ]; then
         local raw_link=$(head -n 1 "$PROXY_LINK_FILE" | sed 's/.*tg:\/\//tg:\/\//')
-        EXISTING_LINK="LINK:${GREEN}$raw_link${NC}"	
+        #EXISTING_LINK="LINK:${GREEN}$raw_link${NC}"
+        EXISTING_LINK="LINK: ${GREEN}$raw_link${NC}\n${GREEN}[INFO]${NC} Additional user links (if any) are in $PROXY_LINK_FILE"
     else
-        EXISTING_LINK="${YELLOW}⚠️ File proxy_link.txt not found (Install first)${NC}"
+    else
+        #EXISTING_LINK="${YELLOW}⚠️ File proxy_link.txt not found (Install first)${NC}"
+        EXISTING_LINK="${YELLOW}⚠️ File $PROXY_LINK_FILE not found (Install first)${NC}"
     fi  
     # 2. Check if installation files exist
     if [ -f "$COMPOSE_FILE" ]&& command -v docker >/dev/null 2>&1; then
