@@ -68,24 +68,24 @@ print_proxy_link() {
     echo -e "Default 🔗 ${CYAN}$link${NC}"
     echo -e "=========================================================="
 
-    # Extract all additional users from the config
-    if [ -f "$CONFIG_FILE" ]; then    
-        # Ищем секцию [access.users] и читаем все строки с '=' после неё
+    # Extract additional users from the configuration file
+    if [[ -f "$CONFIG_FILE" ]]; then
+        echo -e "Additional user list:"
+
+        # Locate the [access.users] section and process all lines containing '='
         sed -n '/\[access.users\]/,$p' "$CONFIG_FILE" | grep "=" | while read -r line; do
-            local u_name=$(echo "$line" | cut -d' ' -f1)
+            # Extract username (before '=') and secret (inside quotes)
+            local u_name=$(echo "$line" | cut -d'=' -f1 | tr -d ' ')
             local u_secret=$(echo "$line" | cut -d'"' -f2)
-            
-            # Пропускаем основного пользователя, так как он уже записан первым
+            # Skip the default 'docker' user
             [[ "$u_name" == "docker" ]] && continue
-            
+            # Construct the Telegram proxy link
             local u_link="tg://proxy?server=$ip&port=$p&secret=ee${u_secret}${domain_hex}"
-                     
-            echo -e "additional user list"
+            # Output the link to the console and save it to the file
             echo -e "$u_name 🔗 ${CYAN}$u_link${NC}"
-            echo "$u_name: $u_link" >> "$PROXY_LINK_FILE"            
+            echo "$u_name: $u_link" >> "$PROXY_LINK_FILE"
         done
-    fi
-    
+    fi    
     echo -e "=========================================================="
     info "All links saved to $PROXY_LINK_FILE"
 }
