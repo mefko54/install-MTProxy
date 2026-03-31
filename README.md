@@ -29,8 +29,8 @@ bash <(curl -s "https://raw.githubusercontent.com/nolaxe/install-MTProxy/main/te
 - мультипользователей ⏳
 
 ####  🛠  Процесс установки:  
-`выбор действия`  
-<img width="505" height="273" alt="image" src="https://github.com/user-attachments/assets/cc15910f-ea28-4a70-8091-675265616e72" />
+`меню`  
+<img width="624" height="294" alt="image" src="https://github.com/user-attachments/assets/ed0b671f-56aa-42a6-9498-cce79886c4db" />
 
 `подготовка зависимостей`  
 <img width="753" height="156" alt="image" src="https://github.com/user-attachments/assets/0d5613ac-8023-44be-a9c0-f9ac35e855e0" />
