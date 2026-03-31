@@ -176,7 +176,7 @@ check_and_install() {
 
     echo -e "\n${GREEN}[*] Environment is ready!${NC}"
     # echo -ne "${YELLOW}[?] Press [ENTER] to continue...${NC}"
-    ask "Press ${GREEN}[ENTER]${NC} to continue... "
+    ask "Press [ENTER] to continue... "
     read -r 
     # touch .setup_done
 }
@@ -267,7 +267,7 @@ case $INSTALL_MODE in
     4)
         warn "This will remove EVERYTHING related to Telemt"
         # read -p "[?] Are you sure? Press [ENTER] to confirm or type anything to cancel: " -r; echo
-        ask "Are you sure? Press ${GREEN}[ENTER]${NC} to confirm or type anything to cancel: "; read -r
+        ask "Are you sure? Press [ENTER] to confirm or type anything to cancel: "
         IFS= read -r REPLY
         if [[ -z "$REPLY" ]]; then
             # 1. Remove rules from UFW (two lines: file check + actions)
@@ -303,7 +303,7 @@ if [ -f "$CONFIG_FILE" ]; then
     echo -e "${CYAN}    (Keeping the old secret will keep your current proxy link working)${NC}"
 
     # echo -ne "[?] Press [ENTER] to keep current, type anything for a NEW one: "
-    ask "Press ${GREEN}[ENTER]${NC} to keep current, type anything for a NEW one: "
+    ask "Press [ENTER] to keep current, type anything for a NEW one: "
     IFS= read -n 1 -s REPLY
     echo ""
 
@@ -328,7 +328,7 @@ if [ "$OVERWRITE" = false ]; then
     # Start a loop to ensure the selected port is actually available
     while true; do
     # read -p "[?] Enter port (default $PORT): " input_port
-    ask "Enter port (default ${CYAN}$PORT${NC}): "; read -r input_port
+    ask "Enter port (default $PORT): "; read -r input_port
         PORT=${input_port:-$PORT}
         if lsof -i :"$PORT" -sTCP:LISTEN -t >/dev/null ; then
             warn "Port $PORT is already occupied!"
@@ -341,6 +341,7 @@ if [ "$OVERWRITE" = false ]; then
     done
         
     read -p "[?] Enter domain (default $SITE): " input_site
+    ask "Enter domain (default $SITE): "; read -r input_site
     SITE=${input_site:-$SITE}    
     # Display connection details for the user before Ad_tag prompt
     echo -e "\n${CYAN}- To set up an Ad Tag, provide the settings above to @MTProxybot - ${NC}"
