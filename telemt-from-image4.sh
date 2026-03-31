@@ -233,7 +233,7 @@ main_menu() {
     echo -e " 3| ${YELLOW}${TOGGLE_ACTION} ${NC}          $STATUS_MSG"
     echo -e " 4| ${RED}Full Uninstall${NC}           (Stop & Remove All)"
     echo -e " 5| ${GREEN}Update Image${NC}             (Pull latest & Restart)\n"
-    echo -e " 6| Run external build script: $SCRIPT_NAME)"
+    # echo -e " 9| Run external build script: $SCRIPT_NAME)"
     # echo -ne "\n${YELLOW}[?] Choose option [1-5]:${NC} "
     echo -e ""; ask "Choose option [1-5]: "
     read -r INSTALL_MODE
@@ -290,7 +290,7 @@ case $INSTALL_MODE in
             err "Configuration not found. Install proxy first."
         fi
         exit 0 ;;
-    6)
+    9)
         info "Fetching build script..."
         curl -sLO "$BUILD_SCRIPT_URL"
         if [ -f "./$SCRIPT_NAME" ]; then
