@@ -1,7 +1,8 @@
 #!/bin/bash
+
 # Install Telemt proxy server (MTProxy) via Docker Distroless
-# Changelog: ip4  # ip4, multi user, random url, ask +
-echo "telemt-from-image-mu.sh" 
+# telemt-from-image-mu.sh
+# Changelog: ip4, random url, ask +,  #9), #ad_tag, multi user
 
 # Check for root privileges
 [ "$EUID" -ne 0 ] && { echo -e "${RED}[ERROR] Please run as root ${NC}"; exit 1; }
