@@ -13,18 +13,19 @@ IMAGE_NAME="whn0thacked/telemt-docker:latest" # https://github.com/An0nX/telemt-
 # 2 # Build https://github.com/telemt/telemt by whn0thacked = Copy at 2026-02
 # IMAGE_NAME="exalon/telemt-docker:latest"  # https://hub.docker.com/repository/docker/exalon/telemt-docker/general
 
-# --- Def Conf ---
+# --- Default values ---
 PORT="4433"
-SITE="google.com"
+# Fetch random site or default to google.com
+SITE=$(curl -s https://raw.githubusercontent.com/nolaxe/install-MTProxy/main/site.txt | shuf -n 1)
+SITE=${SITE:-"google.com"}
 
 # --- Conf ---
 OVERWRITE=true
 CONFIG_FILE="telemt.toml"
 COMPOSE_FILE="docker-compose.yml"
+# PROXY_LINK_FILE="proxy_link.txt" # 
 AD_TAG="000empty000"
-
-BUILD_SCRIPT_URL="https://raw.githubusercontent.com/nolaxe/install-MTProxy/main/telemt-from-source.sh"
-SCRIPT_NAME=$(basename "$BUILD_SCRIPT_URL")        
+BUILD_SCRIPT_URL="https://raw.githubusercontent.com/nolaxe/install-MTProxy/main/telemt-from-source.sh"; SCRIPT_NAME=$(basename "$BUILD_SCRIPT_URL")        
 
 # --- Colors ---
 GREEN='\033[0;32m'
@@ -176,8 +177,7 @@ check_and_install() {
 
     echo -e "\n${GREEN}[*] Environment is ready!${NC}"
     # echo -ne "${YELLOW}[?] Press [ENTER] to continue...${NC}"
-    ask "Press [ENTER] to continue... "
-    read -r 
+    ask "Press [ENTER] to continue... "; read -r 
     # touch .setup_done
 }
 
@@ -233,7 +233,8 @@ main_menu() {
     echo -e " 2) Custom Install           (Custom Port, Domain...)"
     echo -e " 3) ${YELLOW}${TOGGLE_ACTION} ${NC}          $STATUS_MSG"
     echo -e " 4) ${RED}Full Uninstall${NC}           (Stop & Remove All)\n"
-    echo -e " 5) Run external build script: $SCRIPT_NAME)"
+    echo -e " 5) ${GREEN}Update Image${NC}             (Pull latest & Restart)"
+    echo -e " 6) Run external build script: $SCRIPT_NAME)"
     # echo -ne "\n${YELLOW}[?] Choose option [1-5]:${NC} "
     echo -e ""; ask "Choose option [1-5]: "
     read -r INSTALL_MODE
@@ -282,6 +283,15 @@ case $INSTALL_MODE in
         fi
         exit 0 ;;
     5)
+        info "Updating Telemt image..."
+        if [ -f "$COMPOSE_FILE" ]; then
+            docker compose pull && docker compose up -d --remove-orphans
+            info "Update complete. Running latest version."
+        else
+            err "Configuration not found. Install proxy first."
+        fi
+        exit 0 ;;
+    6)
         info "Fetching build script..."
         curl -sLO "$BUILD_SCRIPT_URL"
         if [ -f "./$SCRIPT_NAME" ]; then
@@ -304,6 +314,7 @@ if [ -f "$CONFIG_FILE" ]; then
 
     # echo -ne "[?] Press [ENTER] to keep current, type anything for a NEW one: "
     ask "Press [ENTER] to keep current, type anything for a NEW one: "
+    
     IFS= read -n 1 -s REPLY
     echo ""
 
