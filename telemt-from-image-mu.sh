@@ -236,14 +236,14 @@ echo -e "${GREEN}"
 echo "╔════════════════════════════════════════════════════╗"
 echo "║              MTProxy (Telemt) Installer            ║"
 echo "╚════════════════════════════════════════════════════╝"
-echo -e "${NC}Build from existing image: $IMAGE_NAME"
+echo -e "${NC}Build from image: $IMAGE_NAME"
 }
 
 main_menu() {
     echo -e "$DOCKER_INFO"
     [ -n "$EXISTING_LINK" ] && echo -e "$EXISTING_LINK"
-    echo -e "\n\nSelect action: "
-    #echo -e "${NC}\nBuild from existing image: $IMAGE_NAME"
+    ask "\n\nSelect action:\n"
+    #echo -e "${NC}\nBuild from image: $IMAGE_NAME"
     echo -e " 1) ${CYAN}Fast Install             (Port: $PORT, Domain: $SITE)${NC}"
     echo -e " 2) Custom Install           (Custom Port, Domain...)"    
     echo -e " 3) ${YELLOW}${TOGGLE_ACTION} ${NC}          $STATUS_MSG"
