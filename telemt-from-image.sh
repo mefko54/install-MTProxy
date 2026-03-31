@@ -313,10 +313,13 @@ if [ -f "$CONFIG_FILE" ]; then
     echo -e "${CYAN}    (Keeping the old secret will keep your current proxy link working)${NC}"
 
     # echo -ne "[?] Press [ENTER] to keep current, type anything for a NEW one: "
-    ask "Press [ENTER] to keep current, type anything for a NEW one: "
+    ask "_Press [ENTER] to keep current, type anything for a NEW one: "; read -r REPLY
     
-    IFS= read -n 1 -s REPLY
-    echo ""
+    #ask "Press [ENTER] to keep current, type anything for a NEW one: "
+    
+    
+    #IFS= read -n 1 -s REPLY
+    #echo ""
 
     if [[ -z "$REPLY" ]]; then
         SECRET=$OLD_SECRET
