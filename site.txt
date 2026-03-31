@@ -1,5 +1,13 @@
 google.com
 edition.cnn.com
 theguardian.com
-finland.fi
 valtioneuvosto.fi
+lemonde.fr
+spiegel.de
+spotify.com
+distrowatch.com
+gutenberg.org
+slashdot.org
+ted.com
+scientificamerican.com
+wolframalpha.com
