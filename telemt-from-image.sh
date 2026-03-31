@@ -340,7 +340,7 @@ if [ "$OVERWRITE" = false ]; then
         fi
     done
         
-    read -p "[?] Enter domain (default $SITE): " input_site
+    # read -p "[?] Enter domain (default $SITE): " input_site
     ask "Enter domain (default $SITE): "; read -r input_site
     SITE=${input_site:-$SITE}    
     # Display connection details for the user before Ad_tag prompt
@@ -348,7 +348,8 @@ if [ "$OVERWRITE" = false ]; then
     echo -e "IP:Port: ${GREEN}$(get_public_ip):$PORT${NC}"
     echo -e "Secret:  ${GREEN}$SECRET${NC}"
     echo -e "${CYAN}--------------------------------${NC}"
-    read -p "[?] Enter Ad_tag (press ENTER to skip): " input_tag
+    # read -p "[?] Enter Ad_tag (press ENTER to skip): " input_tag
+    ask "Enter Ad_tag (press ENTER to skip): "; read -r input_tag
     AD_TAG=${input_tag:-$AD_TAG}    
 fi
 
@@ -425,7 +426,8 @@ EOF
 if [ "$OVERWRITE" = true ]; then
     deploy_container && { echo -e "\n🎉 Proxy is ready to use!"; }
 else
-    echo -ne "[?] 🚀 ${GREEN}Start now?${NC} Press [ENTER] to confirm: "
+    # echo -ne "[?] 🚀 ${GREEN}Start now?${NC} Press [ENTER] to confirm: "
+    ask "🚀 ${GREEN}Start now?${NC} Press [ENTER] to confirm: "
     IFS= read -r REPLY
     [[ -z "$REPLY" ]] && deploy_container
 fi
