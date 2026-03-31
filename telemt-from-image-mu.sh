@@ -3,6 +3,9 @@
 # Changelog: ip4  # ip4, multi user, random url
 echo "telemt-from-image-mu.sh" 
 
+# Check for root privileges
+[ "$EUID" -ne 0 ] && { echo -e "${RED}[ERROR] Please run as root ${NC}"; exit 1; }
+
 # --- Docker images:     --------------------------------------------
 # 1 # Build https://github.com/telemt/telemt by whn0thacked = latest
 IMAGE_NAME="whn0thacked/telemt-docker:latest" # https://github.com/An0nX/telemt-docker/blob/master/README.md
@@ -14,21 +17,17 @@ IMAGE_NAME="whn0thacked/telemt-docker:latest" # https://github.com/An0nX/telemt-
 # --- Def Conf ---
 PORT="4433"
 # SITE="google.com"
-RANDOM_SITE=$(curl -s https://raw.githubusercontent.com/nolaxe/install-MTProxy/main/site.txt | shuf -n 1)
-if [ -n "$RANDOM_SITE" ]; then
-    SITE=$RANDOM_SITE
-else
-    SITE="google.com"
-fi
-# --- Conf ---
+# Fetch random site or default to google.com
+SITE=$(curl -s https://raw.githubusercontent.com/nolaxe/install-MTProxy/main/site.txt | shuf -n 1)
+SITE=${SITE:-"google.com"}
+
+# --- Default values ---
 OVERWRITE=true
 CONFIG_FILE="telemt.toml"
 COMPOSE_FILE="docker-compose.yml"
-PROXY_LINK_FILE="proxy_link.txt"
+PROXY_LINK_FILE="proxy_link.txt" # 
 AD_TAG="000empty000"
-
-BUILD_SCRIPT_URL="https://raw.githubusercontent.com/nolaxe/install-MTProxy/main/telemt-from-source.sh"
-SCRIPT_NAME=$(basename "$BUILD_SCRIPT_URL")        
+BUILD_SCRIPT_URL="https://raw.githubusercontent.com/nolaxe/install-MTProxy/main/telemt-from-source.sh"; SCRIPT_NAME=$(basename "$BUILD_SCRIPT_URL")        
 
 # --- Colors ---
 GREEN='\033[0;32m'
@@ -43,9 +42,8 @@ NC='\033[0m'
 info()  { echo -e "${GREEN}[INFO]${NC} $*"; }
 warn()  { echo -e "${YELLOW}[WARN]${NC} $*"; } 
 err()   { echo -e "${RED}[ERROR]${NC} $*"; }
+ask()   { echo -ne "${YELLOW}[?]${NC} $*"; }
 
-# Check for root privileges
-[ "$EUID" -ne 0 ] && { echo -e "${RED}[ERROR] Please run as root ${NC}"; exit 1; }
 # Check if container is running
 is_running() { [ "$(docker inspect -f '{{.State.Running}}' telemt 2>/dev/null)" == "true" ]; }
 # Get public IP address
@@ -118,7 +116,8 @@ check_and_install() {
 
     # 1. Ask for permission
     info "This script can check & install dependencies (Update, Docker, Compose, OpenSSL, lsof)"
-    echo -ne "${YELLOW}[?] Press [ENTER] to check/install or ANY OTHER KEY to skip: ${NC}"
+    #echo -ne "${YELLOW}[?] Press [ENTER] to check/install or ANY OTHER KEY to skip: ${NC}"
+    ask "Press [ENTER] to check/install or ANY OTHER KEY to skip: "
     IFS= read -n 1 -s REPLY
     echo "" 
 
@@ -190,10 +189,9 @@ check_and_install() {
         fi
     fi
     # echo -e "\n${GREEN}[*] Environment is ready!${NC}"
-    info "Environment is ready!\n"
-    
-    echo -ne "${YELLOW}[?] Press [ENTER] to continue...${NC}"
-    read -r 
+    info "Environment is ready!\n"    
+    # echo -ne "${YELLOW}[?] Press [ENTER] to continue...${NC}"
+    ask "Press [ENTER] to continue... "; read -r 
     # touch .setup_done
 }
 
@@ -237,7 +235,7 @@ gui_top() {
 echo -e "${GREEN}"
 echo "╔════════════════════════════════════════════════════╗"
 echo "║              MTProxy (Telemt) Installer            ║"
-echo "╚════════════════════════════════════════════════════╝1"
+echo "╚════════════════════════════════════════════════════╝"
 echo -e "${NC}Build from existing image: $IMAGE_NAME"
 }
 
@@ -252,7 +250,8 @@ main_menu() {
     echo -e " 4) ${RED}Full Uninstall${NC}           (Stop & Remove All)\n"
     echo -e " 5) ${GREEN}Update Image${NC}             (Pull latest & Restart)"
     echo -e " 6) Run external build script: $SCRIPT_NAME"
-    echo -ne "\n${YELLOW}[?] Choose option [1-5]:${NC} "
+    # echo -ne "\n${YELLOW}[?] Choose option [1-5]:${NC} "
+    echo -e ""; ask "Choose option [1-5]: "
     read -r INSTALL_MODE
 }
 
@@ -325,9 +324,12 @@ if [ -f "$CONFIG_FILE" ]; then
     OLD_SECRET=$(grep "docker =" "$CONFIG_FILE" | awk -F'=' '{print $2}' | tr -d ' "')
     echo -e "${YELLOW}[?] Config found. Use existing secrets? ($OLD_SECRET and others)${NC}"
     echo -e "${CYAN}    (This will restore ALL users from the previous config)${NC}"
+    
     # Use a single read to prevent "hanging"
-    read -p "[?] Press [ENTER] to keep ALL, type anything for a NEW one: " -r REPLY
-
+    # read -p "[?] Press [ENTER] to keep ALL, type anything for a NEW one: " -r REPLY
+    ask "Press [ENTER] to keep ALL, type anything for a NEW one: "
+    
+    IFS= read -n 1 -s REPLY
     if [[ -z "$REPLY" ]]; then
         SECRET=$OLD_SECRET
         # 2. Extract everything AFTER the 'docker =' line to capture additional users
@@ -353,7 +355,8 @@ fi
 if [ "$OVERWRITE" = false ]; then
     # Start a loop to ensure the selected port is actually available
     while true; do
-    read -p "[?] Enter port (default $PORT): " input_port
+    # read -p "[?] Enter port (default $PORT): " input_port
+    ask "Enter port (default $PORT): "; read -r input_port
         PORT=${input_port:-$PORT}
         if lsof -i :"$PORT" -sTCP:LISTEN -t >/dev/null ; then
             warn "Port $PORT is already occupied!"
@@ -364,16 +367,18 @@ if [ "$OVERWRITE" = false ]; then
             break
         fi
     done
-        
-    read -p "[?] Enter domain (default $SITE): " input_site
+    # read -p "[?] Enter domain (default $SITE): " input_site
+    ask "Enter domain (default $SITE): "; read -r input_site
     SITE=${input_site:-$SITE}    
     # Display connection details for the user before Ad_tag prompt
     echo -e "\n${CYAN}- To set up an Ad Tag, provide the settings above to @MTProxybot - ${NC}"
     echo -e "IP:Port: ${GREEN}$(get_public_ip):$PORT${NC}"
     echo -e "Secret:  ${GREEN}$SECRET${NC}"
     echo -e "${CYAN}--------------------------------${NC}"
-    read -p "[?] Enter Ad_tag (press ENTER to skip): " input_tag
-    AD_TAG=${input_tag:-$AD_TAG}    
+    # fix  me
+    # read -p "[?] Enter Ad_tag (press ENTER to skip): " input_tag
+    # ask "Enter Ad_tag (press ENTER to skip): "; read -r input_tag
+    AD_TAG=${input_tag:-$AD_TAG}   
 fi
 
 if command -v ufw >/dev/null && ufw status | grep -q "active"; then
@@ -463,14 +468,9 @@ services:
 #        hard: 65536
 EOF
 
-#  Execution 
-if [ "$OVERWRITE" = true ]; then
-    deploy_container && { echo -e "\n🎉 Proxy is ready to use!"; }
-else
-    echo -ne "[?] 🚀 ${GREEN}Start now?${NC} Press [ENTER] to confirm: "
-    IFS= read -r REPLY
-    [[ -z "$REPLY" ]] && deploy_container
-fi
-
+# --- Execution ---
+deploy_container && { echo -e "\n🎉 Proxy is ready to use!"; }
+# --- Status ---
 is_running && print_proxy_link "$PORT" "$SECRET" || info "Status: Stopped. Use Option 3 later."
+
 #mn#
