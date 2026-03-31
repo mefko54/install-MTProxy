@@ -14,7 +14,8 @@ bash <(curl -s "https://raw.githubusercontent.com/nolaxe/install-MTProxy/main/te
 - Проверяет нужные зависимости и устанавливает при отсутствии
 - Запрашивает параметры (порт, TLS домен для маскировка трафика, ad_tag ? не реализованно ⏳)
 - Скачивает собранный образ telemt (источник `https://hub.docker.com/r/whn0thacked/telemt-docker`)  
-- Генерирует файлы telemt.toml, docker-compose.yml, ключ
+- Генерирует секреты для пользователей  
+- Генерирует файлы telemt.toml, docker-compose.yml
 - Запускает установку  
 допом скриптом можно отключить\включить прокси
 
