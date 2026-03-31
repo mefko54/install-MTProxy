@@ -18,8 +18,13 @@ IMAGE_NAME="whn0thacked/telemt-docker:latest" # https://github.com/An0nX/telemt-
 
 # --- Def Conf ---
 PORT="4433"
-SITE="google.com"
-
+# SITE="google.com"
+RANDOM_SITE=$(curl -s https://raw.githubusercontent.com/nolaxe/install-MTProxy/main/site.txt | shuf -n 1)
+if [ -n "$RANDOM_SITE" ]; then
+    SITE=$RANDOM_SITE
+else
+    SITE="google.com"
+fi
 # --- Conf ---
 OVERWRITE=true
 CONFIG_FILE="telemt.toml"
