@@ -1,6 +1,6 @@
 #!/bin/bash
 # Install Telemt proxy server (MTProxy) via Docker Distroless
-# Changelog: ip4  
+# Changelog: ip4, ask
 echo "telemt-from-image.sh" 
 
 # --- Docker images:     --------------------------------------------
