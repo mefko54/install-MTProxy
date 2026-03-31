@@ -227,7 +227,7 @@ echo -e "${NC}Build from existing image: $IMAGE_NAME"
 main_menu() {
     echo -e "$DOCKER_INFO"
     [ -n "$EXISTING_LINK" ] && echo -e "$EXISTING_LINK"
-    ask "\n\nSelect action: "
+    ask "\n\nSelect action:\n"
     # echo -e "\n\nSelect action: "
     # echo -e "${NC}\nBuild from existing image: $IMAGE_NAME"
     echo -e " 1| ${CYAN}Fast Install             (Port: $PORT, Domain: $SITE)${NC}"
