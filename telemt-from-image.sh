@@ -36,6 +36,7 @@ NC='\033[0m'
 info()  { echo -e "${GREEN}[INFO]${NC} $*"; }
 warn()  { echo -e "${YELLOW}[WARN]${NC} $*"; } 
 err()   { echo -e "${RED}[ERROR]${NC} $*"; }
+ask()   { echo -ne "${YELLOW}[?]${NC} $*"; }
 
 # Check for root privileges
 [ "$EUID" -ne 0 ] && { echo -e "${RED}[ERROR] Please run as root ${NC}"; exit 1; }
@@ -97,7 +98,8 @@ check_and_install() {
 
     # 1. Ask for permission
     info "This script can check & install dependencies (Update, Docker, Compose, OpenSSL, lsof)"
-    echo -ne "${YELLOW}[?] Press [ENTER] to check/install or ANY OTHER KEY to skip: ${NC}"
+    #echo -ne "${YELLOW}[?] Press [ENTER] to check/install or ANY OTHER KEY to skip: ${NC}"
+    ask "Press ${GREEN}[ENTER]${NC} to check/install or ANY OTHER KEY to skip777: "
     IFS= read -n 1 -s REPLY
     echo "" 
 
