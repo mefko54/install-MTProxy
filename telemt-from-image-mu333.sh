@@ -59,6 +59,22 @@ print_proxy_link() {
     local link="tg://proxy?server=$ip&port=$p&secret=$full_secret"
     echo "Default: $link" > "$PROXY_LINK_FILE"   
 
+    # 1. TLS Mode (префикс ee + секрет + hex домена)
+    local link_tls="tg://proxy?server=$ip&port=$p&secret=ee${s}${domain_hex}"
+    echo -e "${CYAN}[TLS Mode]${NC} (Recommended):"
+    echo -e "$link_tls"
+
+    # 2. Secure Mode (префикс dd + секрет)
+    local link_secure="tg://proxy?server=$ip&port=$p&secret=dd${s}"
+    echo -e "\n${CYAN}[Secure Mode]${NC}:"
+    echo -e "$link_secure"
+
+    # 3. Classic Mode (просто секрет без префиксов)
+    local link_classic="tg://proxy?server=$ip&port=$p&secret=${s}"
+    echo -e "\n${CYAN}[Classic Mode]${NC} (Old/Unsafe):"
+    echo -e "$link_classic"
+
+
     echo -e "=========================================================="
     echo -e "Copy the link below to Telegram and click it to activate the proxy"
     echo -e "Default 🔗 ${CYAN}$link${NC}"
@@ -338,10 +354,6 @@ if [ "$OVERWRITE" = false ]; then
 else
     PROTO_TLS="true"; info "Selected: TLS Mode"
 fi
-
-
-
-
 
 
 # --- Proxy Secret: Keep Existing or New ---
