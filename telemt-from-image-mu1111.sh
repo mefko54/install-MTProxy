@@ -318,14 +318,8 @@ case $INSTALL_MODE in
         exit 0 ;;
     9)
         info "Fetching build script..."
-        curl -sLO "$BUILD_SCRIPT_URL"
-        if [ -f "./$SCRIPT_NAME" ]; then
-            chmod +x "./$SCRIPT_NAME"
-            exec "./$SCRIPT_NAME"
-        else
-            err "Failed to download script from GitHub."
-            exit 1
-        fi
+        curl -sLO "$BUILD_SCRIPT_URL" || { err "Failed to download script."; exit 1; }
+        chmod +x "./$SCRIPT_NAME" && exec "./$SCRIPT_NAME"
         ;;
     *) err "Invalid option."; exit 1 ;;
 esac
@@ -360,8 +354,7 @@ if [ -f "$CONFIG_FILE" ]; then
     
     # Use a single  to prevent "hanging"
     #  -p "[?] Press [ENTER] to keep ALL, type anything for a NEW one: " -r REPLY
-    ask "Press [ENTER] to keep ALL, type anything for a NEW one: "
-    
+    ask "Press [ENTER] to keep ALL, type anything for a NEW one: "    
     IFS= read -n 1 -s REPLY
     if [[ -z "$REPLY" ]]; then
         SECRET=$OLD_SECRET
@@ -461,8 +454,8 @@ tls = $PROTO_TLS
 port = $PORT
 listen_addr_ipv4 = "0.0.0.0"
 listen_addr_ipv6 = "::"
-#metrics_port = 9090
-#metrics_whitelist = ["0.0.0.0", "::1"]
+metrics_port = 9090
+metrics_whitelist = ["0.0.0.0"]
 [[server.listeners]]
 ip = "0.0.0.0"
 [timeouts]
@@ -485,9 +478,10 @@ services:
     restart: unless-stopped
     volumes:
       - ./$CONFIG_FILE:/etc/telemt.toml:ro
-    ports:
-      - "$PORT:$PORT/tcp"
+#    ports:
+#      - "$PORT:$PORT/tcp"
 #      - "127.0.0.1:9090:9090/tcp"
+    network_mode: "host"
     cap_drop:
       - ALL
     cap_add:
