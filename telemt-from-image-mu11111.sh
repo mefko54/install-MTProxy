@@ -65,8 +65,8 @@ print_proxy_link() {
 
     echo -e "=========================================================="
     echo -e "Copy the link below to Telegram and click it to activate the proxy"
-    echo -e "Default 🔗 ${CYAN}$link${NC}"
-    echo -e "=========================================================="  
+    echo -e "Default link 🔗 ${CYAN}$link${NC}"
+    # echo -e "=========================================================="  
     
     # test
     # 1. TLS Mode: Uses "ee" prefix + secret + hex domain.
