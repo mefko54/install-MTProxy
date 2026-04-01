@@ -72,15 +72,15 @@ print_proxy_link() {
 ####################
     # 1. TLS Mode: Uses "ee" prefix + secret + hex domain.
     local link_tls="tg://proxy?server=$ip&port=$p&secret=ee${s}${domain_hex}"
-    echo -e "\n[TLS Mode]:"; echo -e "$link_tls"
+    info "[TLS Mode]:"; info $link_tls
 
     # 2. Secure Mode: Uses "dd" prefix + secret.
     local link_secure="tg://proxy?server=$ip&port=$p&secret=dd${s}"
-    echo -e "\n[Secure Mode]:"; echo -e "$link_secure"
+    info "[Secure Mode]:"; info $link_secure
 
     # 3. Classic Mode: Raw 32-char secret without any prefixes.
     local link_classic="tg://proxy?server=$ip&port=$p&secret=${s}"
-    echo -e "\n[Classic Mode]:"; echo -e "$link_classic"
+    info "[TLS Mode]:"; info $link_classic
 #############  
 
     # Extract additional users from the configuration file
