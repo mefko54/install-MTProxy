@@ -99,8 +99,8 @@ print_proxy_link() {
     fi
     
     echo -e "=========================================================="
-    info "All links saved to $PROXY_LINK_FILE"
-    info "Metrics available at: $ip:9090/metrics"
+    info "All links are also available in $PROXY_LINK_FILE"
+    info "Metrics: $ip:9090/metrics"
 }
 
 # Pull image and (re)start the Docker container
