@@ -509,7 +509,8 @@ services:
 EOF
 
 # --- Execution ---
-deploy_container && { echo -e "\n🎉 Proxy is ready to use!"; }
+# deploy_container && { echo -e "\n🎉 Proxy is ready to use!"; }
+deploy_container && { info "🎉 Proxy is ready to use!"; }
 # --- Status ---
 is_running && print_proxy_link "$PORT" "$SECRET" || info "Status: Stopped. Use Option 3 later."
 
