@@ -29,6 +29,7 @@ COMPOSE_FILE="docker-compose.yml"
 PROXY_LINK_FILE="proxy_link.txt" # 
 AD_TAG="000empty000"
 BUILD_SCRIPT_URL="https://raw.githubusercontent.com/nolaxe/install-MTProxy/main/telemt-from-source.sh"; SCRIPT_NAME=$(basename "$BUILD_SCRIPT_URL")        
+MAX_USERS=16
 
 # --- Colors ---
 GREEN='\033[0;32m'
@@ -387,15 +388,20 @@ if command -v ufw >/dev/null && ufw status | grep -q "active"; then
 fi
 
 # --- Multiple Users Setup ---
-#USER_CONFIG=""
-if [ "$OVERWRITE" = false ]; then
-    read -p "[?] How many additional users to add? (0-16, default 0): " user_count
-    user_count=${user_count:-0}
+# MAX_USERS=16
 
-    if (( user_count > 16 )); then user_count=16; fi
+if [ "$OVERWRITE" = false ]; then
+    # Используем переменную в тексте вопроса
+    read -p "[?] How many additional users to add? (0-$MAX_USERS, default 0): " user_count
+    user_count=${user_count:-0}
+    
+    if (( user_count > MAX_USERS )); then 
+        user_count=$MAX_USERS
+        echo -e "${YELLOW}[!] Limited to $MAX_USERS users.${NC}"
+    fi
+
     for (( i=1; i<=user_count; i++ )); do
-    # Explain the default behavior if Enter is pressed
-        echo -e "${YELLOW}[!] If you just press Enter (empty string), the name will be Bastard$i${NC}"
+        echo -e "${YELLOW}[!] If you just press Enter, the name will be Bastard$i${NC}"
         read -p "[?] Enter name for user $i: " u_name              
         u_name=${u_name:-Bastard$i}        
         new_secret=$(openssl rand -hex 16)
