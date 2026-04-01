@@ -76,23 +76,28 @@ print_proxy_link() {
     # 3. Classic Mode: Raw 32-char secret without any prefixes.
     # local link_classic="tg://proxy?server=$ip&port=$p&secret=${s}"; info "[Classic Mode]: $link_classic"
 
-    # Extract additional users from the configuration file
+    # Extract additional users from the configuration file    
     if [[ -f "$CONFIG_FILE" ]]; then
-        echo -e "Additional user list:"
         # Locate the [access.users] section and process all lines containing '='
-        sed -n '/\[access.users\]/,$p' "$CONFIG_FILE" | grep "=" | while read -r line; do
-            # Extract username (before '=') and secret (inside quotes)
-            local u_name=$(echo "$line" | cut -d'=' -f1 | tr -d ' ')
-            local u_secret=$(echo "$line" | cut -d'"' -f2)
-            # Skip the default 'docker' user
-            [[ "$u_name" == "docker" ]] && continue
-            # Construct the Telegram proxy link
-            local u_link="tg://proxy?server=$ip&port=$p&secret=ee${u_secret}${domain_hex}"
-            # Output the link to the console and save it to the file
-            echo -e "$u_name 🔗 ${CYAN}$u_link${NC}"
-            echo "$u_name: $u_link" >> "$PROXY_LINK_FILE"
-        done
-    fi    
+        local users_list=$(sed -n '/\[access.users\]/,$p' "$CONFIG_FILE" | grep "=" | grep -v "docker =")
+        
+        if [[ -n "$users_list" ]]; then
+            echo -e "Additional user list:"
+            echo "$users_list" | while read -r line; do
+                # Extract username (before '=') and secret (inside quotes)
+                local u_name=$(echo "$line" | cut -d'=' -f1 | tr -d ' ')
+                local u_secret=$(echo "$line" | cut -d'"' -f2)
+                # Construct the Telegram proxy link
+                local u_link="tg://proxy?server=$ip&port=$p&secret=ee${u_secret}${domain_hex}"
+                # Output the link to the console and save it to the file
+                echo -e "$u_name 🔗 ${CYAN}$u_link${NC}"
+                echo "$u_name: $u_link" >> "$PROXY_LINK_FILE"
+            done
+        else
+            echo -e "Additional user list: ${YELLOW}empty${NC}"
+        fi
+    fi
+    
     echo -e "=========================================================="
     info "All links saved to $PROXY_LINK_FILE"
     info "Metrics available at: $ip:9090/metrics"
