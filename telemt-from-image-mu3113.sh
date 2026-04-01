@@ -94,7 +94,7 @@ print_proxy_link() {
                 echo "$u_name: $u_link" >> "$PROXY_LINK_FILE"
             done
         else
-            echo -e "Additional user list: ${YELLOW}empty${NC}"
+            echo -e "(There are no additional users)"
         fi
     fi
     
