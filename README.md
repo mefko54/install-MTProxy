@@ -7,11 +7,11 @@
 Средство: прокси-сервер, который маскирует трафик TG под обычный интернет-трафик
 
 #### 🛠 Установка  
-Необходимо запустить скрипт настройки контейнера
+Необходимо просто запустить скрипт для устаноки контейнера
 ```
 bash <(curl -s "https://raw.githubusercontent.com/nolaxe/install-MTProxy/main/telemt-from-image.sh")
 ```
-доп пользователи
+и вариант с мультипользователями (MAX_USERS=16)
 ```
 bash <(curl -s "https://raw.githubusercontent.com/nolaxe/install-MTProxy/main/telemt-from-image-mu.sh")
 ```
