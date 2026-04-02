@@ -291,7 +291,7 @@ main_menu() {
             1)
                 # Читаем данные только для того, чтобы в конце скрипта вывести правильную ссылку
                 SECRET=$(grep "^docker =" "$CONFIG_FILE" | head -n 1 | awk -F'=' '{print $2}' | tr -d ' "')
-                PORT=$(grep "port =" "$CONFIG_FILE" | awk -F'=' '{print $2}' | tr -d '[:space:]"')
+                PORT=$(sed -n '/\[server\]/,/port =/p' "$CONFIG_FILE" | grep "^port =" | awk -F'=' '{print $2}' | tr -d '[:space:]"')
                 SITE=$(grep "tls_domain =" "$CONFIG_FILE" | awk -F'=' '{print $2}' | tr -d ' "')
                 info $SECRET
                 info $PORT
