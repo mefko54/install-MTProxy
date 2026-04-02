@@ -249,16 +249,16 @@ status_detection() {
         TOGGLE_ACTION="Not installed"
         EXISTING_LINK="" # In this case, the link is truly not needed
     fi
-    DOCKER_INFO="\nSTATUS:  Installed [${INST_ICON}]  |  Active [${ACT_ICON}]"
+    local inst_date=""; [ -f ".install_date" ] && inst_date=" (Installed: $(cat .install_date))"
+    DOCKER_INFO="\nSTATUS:  Installed [${INST_ICON}] $inst_date  |  Active [${ACT_ICON}]"
 }
 
 gui_top() {
-local inst_date=""; [ -f ".install_date" ] && inst_date=" (Installed: $(cat .install_date))"
 echo -e "${GREEN}"
 echo "╔════════════════════════════════════════════════════╗"
 echo "║              MTProxy (Telemt) Installer            ║"
 echo "╚════════════════════════════════════════════════════╝"
-echo -e "${NC}Build from image: $IMAGE_NAME // ${CYAN}$inst_date${NC}"
+echo -e "${NC}Build from image: $IMAGE_NAME"
 }
 
 main_menu() {
