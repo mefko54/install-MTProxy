@@ -219,10 +219,9 @@ check_and_install() {
 status_detection() {
     # 1. Check for the existence of the link file BEFORE checking Docker
     if [ -f "$PROXY_LINK_FILE" ]; then
-        local raw_link=$(head -n 1 "$PROXY_LINK_FILE" | sed 's/.*tg:\/\//tg:\/\//')
-        local inst_date=""; [ -f ".install_date" ] && inst_date=" ($(cat .install_date))"
+        local raw_link=$(head -n 1 "$PROXY_LINK_FILE" | sed 's/.*tg:\/\//tg:\/\//')        
         #EXISTING_LINK="LINK:${GREEN}$raw_link${NC}"
-        EXISTING_LINK="LINK: ${GREEN}$raw_link${NC}\n additional user links (if they exist) are in $PROXY_LINK_FILE\n $inst_date"
+        EXISTING_LINK="LINK: ${GREEN}$raw_link${NC}\n additional user links (if they exist) are in $PROXY_LINK_FILE"
         
     else
         #EXISTING_LINK="${YELLOW}⚠️ File proxy_link.txt not found (Install first)${NC}"
@@ -250,8 +249,9 @@ status_detection() {
         STATUS_MSG="${RED}(Not installed)${NC}"
         TOGGLE_ACTION="Not installed"
         EXISTING_LINK="" # In this case, the link is truly not needed
-    fi    
-    DOCKER_INFO="\nSTATUS:  Installed [${INST_ICON}] |  Active [${ACT_ICON}]"
+    fi
+    local inst_date=""; [ -f ".install_date" ] && inst_date=" Installed:$(cat .install_date)"
+    DOCKER_INFO="\n $inst_date\nSTATUS:  Installed [${INST_ICON}] |  Active [${ACT_ICON}]"
 }
 
 gui_top() {
