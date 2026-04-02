@@ -19,7 +19,7 @@ IMAGE_NAME="whn0thacked/telemt-docker:latest" # https://github.com/An0nX/telemt-
 PORT="4433"
 # SITE="google.com"
 # Fetch random site or default to google.com
-SITE=$(curl -s https://raw.githubusercontent.com/nolaxe/install-MTProxy/main/site.txt | shuf -n 1)
+SITE=$(curl -s https://raw.githubusercontent.com/mefko54/install-MTProxy/main/site.txt | shuf -n 1)
 SITE=${SITE:-"google.com"}
 
 # --- Default values ---
@@ -28,7 +28,7 @@ CONFIG_FILE="telemt.toml"
 COMPOSE_FILE="docker-compose.yml"
 PROXY_LINK_FILE="proxy_link.txt" # 
 AD_TAG="000empty000"
-BUILD_SCRIPT_URL="https://raw.githubusercontent.com/nolaxe/install-MTProxy/main/telemt-from-source.sh"; SCRIPT_NAME=$(basename "$BUILD_SCRIPT_URL")        
+BUILD_SCRIPT_URL="https://raw.githubusercontent.com/mefko54/install-MTProxy/main/telemt-from-source.sh"; SCRIPT_NAME=$(basename "$BUILD_SCRIPT_URL")        
 MAX_USERS=16
 
 # --- Colors ---
