@@ -276,7 +276,7 @@ main_menu() {
     echo -e ""; ask "Choose option [1-5]: "
     read -r INSTALL_MODE
 }
-сonfig_1() {
+print_users() { # печатаем доп пользаков 
 if [[ -f "$CONFIG_FILE" ]]; then
         # Locate the [access.users] section and process all lines containing '='
         local users_list=$(sed -n '/\[access.users\]/,$p' "$CONFIG_FILE" | grep "=" | grep -v "docker =")        
@@ -298,6 +298,17 @@ if [[ -f "$CONFIG_FILE" ]]; then
     fi
     echo -e "\n$u_link"
     }
+
+f_deploy() {
+# --- Execution ---
+                # deploy_container && { echo -e "\n🎉 Proxy is ready to use!"; }
+                deploy_container && { info "🎉 Proxy is ready to use!"; }
+                [ ! -f ".install_date" ] && date +"%Y-%m-%d" > .install_date
+                # --- Status ---
+                is_running && print_proxy_link "$PORT" "$SECRET" || info "Status: Stopped. Use Option 3 later."
+                ;;
+}
+
 сonfig_found() {
         echo -e "\n${CYAN}Existing configuration detected. Choose your path:${NC}"
         echo -e " 1) ${GREEN}Keep ALL${NC} (Secret + All Users) — useful for changing Port/Domain only"
@@ -309,19 +320,20 @@ if [[ -f "$CONFIG_FILE" ]]; then
         sub_choice=${sub_choice:-1}
 
         case "$sub_choice" in
-            1)
+            1) 
+                f_deploy
+                ;;                
                 # Читаем данные только для того, чтобы в конце скрипта вывести правильную ссылку
-                SECRET=$(grep "^docker =" "$CONFIG_FILE" | head -n 1 | awk -F'=' '{print $2}' | tr -d ' "')
-                PORT=$(sed -n '/\[server\]/,/port =/p' "$CONFIG_FILE" | grep "^port =" | awk -F'=' '{print $2}' | tr -d '[:space:]"')
-                SITE=$(grep "tls_domain =" "$CONFIG_FILE" | awk -F'=' '{print $2}' | tr -d ' "')
-                info $SECRET
-                info $PORT
-                info $SITE
-                info "Using existing $CONFIG_FILE. Skipping generation..."
-                SKIP_CONFIG_GEN=true 
-                goto_deploy=true
-                сonfig_1
-                ;;
+                #SECRET=$(grep "^docker =" "$CONFIG_FILE" | head -n 1 | awk -F'=' '{print $2}' | tr -d ' "')
+                #PORT=$(sed -n '/\[server\]/,/port =/p' "$CONFIG_FILE" | grep "^port =" | awk -F'=' '{print $2}' | tr -d '[:space:]"')
+                #SITE=$(grep "tls_domain =" "$CONFIG_FILE" | awk -F'=' '{print $2}' | tr -d ' "')
+                #info $SECRET
+                #info $PORT
+                #info $SITE
+                #info "Using existing $CONFIG_FILE. Skipping generation..."
+                #SKIP_CONFIG_GEN=true 
+                #goto_deploy=true               
+                #;;
             2)
                 # Вытягиваем старые секреты (основной + доп. пользователи)
                 SECRET=$(grep "^docker =" "$CONFIG_FILE" | head -n 1 | awk -F'=' '{print $2}' | tr -d ' "')
@@ -423,7 +435,6 @@ else
     PROTO_TLS="true"; info "Selected: TLS Mode"
 fi
 
-# ой, тут занято
 # --- Proxy Secret: Keep Existing or New ---
 if [ -f "$CONFIG_FILE" ]; then
     # 1. Finds only the line starting with "docker", takes the first match, and cleans it
