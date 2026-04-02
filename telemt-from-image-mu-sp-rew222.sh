@@ -280,8 +280,8 @@ main_menu() {
 сonfig_found() {
         echo -e "\n${CYAN}Existing configuration detected. Choose your path:${NC}"
         echo -e " 1) ${GREEN}Keep ALL${NC} (Secret + All Users) — useful for changing Port/Domain only"
-        echo -e " 2) ${YELLOW}Keep Master Secret${NC} only — resets additional users"
-        echo -e " 3) ${RED}REFRESH ALL${NC} — new master secret and clear users"
+        echo -e " 2) ${YELLOW}Update Config${NC} only — resets additional users"
+        echo -e " 3) ${RED}Full Reset${NC} — new master secret and clear users"
         echo ""
         ask "Selection [1-3, default 1]: "
         read -r sub_choice
