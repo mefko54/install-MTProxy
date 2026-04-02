@@ -251,7 +251,7 @@ status_detection() {
         EXISTING_LINK="" # In this case, the link is truly not needed
     fi
     local inst_date=""; [ -f ".install_date" ] && inst_date="Last setup date:$(cat .install_date)"
-    DOCKER_INFO="\n$inst_date\nSTATUS:  Config files [${INST_ICON}] |  Active [${ACT_ICON}]"
+    DOCKER_INFO="\n C U R R E N T  S E R V E R  S T A T U S \n$inst_date\nSTATUS:  Config files [${INST_ICON}] |  Active [${ACT_ICON}]"
 }
 
 gui_top() {
