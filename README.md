@@ -9,11 +9,11 @@
 #### 🛠 Установка  
 Необходимо просто запустить скрипт для устаноки контейнера
 ```
-bash <(curl -s "https://raw.githubusercontent.com/nolaxe/install-MTProxy/main/telemt-from-image.sh")
+bash <(curl -s "https://raw.githubusercontent.com/mefko54/install-MTProxy/main/telemt-from-image.sh")
 ```
 и вариант с мультипользователями (MAX_USERS=16)
 ```
-bash <(curl -s "https://raw.githubusercontent.com/nolaxe/install-MTProxy/main/telemt-from-image-mu.sh")
+bash <(curl -s "https://raw.githubusercontent.com/mefko54/install-MTProxy/main/telemt-from-image-mu.sh")
 ```
 #### 📋 Что делает скрипт:
 - Проверяет нужные зависимости и устанавливает при отсутствии (Ubuntu 24)
@@ -53,7 +53,7 @@ bash <(curl -s "https://raw.githubusercontent.com/nolaxe/install-MTProxy/main/te
 ###  Самостоятельная сборка образа, разворачивание на сервере
 без проверки и установки зависимостей, для сборки необходимо иметь более 0,5GB памяти на сервере
 ```
-bash <(curl -s "https://raw.githubusercontent.com/nolaxe/install-MTProxy/main/telemt-from-source.sh")
+bash <(curl -s "https://raw.githubusercontent.com/mefko54/install-MTProxy/main/telemt-from-source.sh")
 ```
 ####  🛠  Процесс установки:  
 <img width="736" height="232" alt="image" src="https://github.com/user-attachments/assets/096fcb3b-cb7a-4201-8315-2fcc791de821" />
@@ -83,7 +83,7 @@ bash <(curl -s "https://raw.githubusercontent.com/nolaxe/install-MTProxy/main/te
    (или делаем ярлык, вставляем логин\ip\пароль в свойства ярыка `..\putty_portable.exe root@YOUR_IP_HERE -pw your_pas_here`, не надо будет вводить снова)
 3) Вставляем в терминал строку
 ```
-bash <(curl -s "https://raw.githubusercontent.com/nolaxe/install-MTProxy/main/telemt-from-image.sh")
+bash <(curl -s "https://raw.githubusercontent.com/mefko54/install-MTProxy/main/telemt-from-image.sh")
 ```
 копировать, пкм в поле терминала вставит текст из буфера, ввод  
 <img width="519" height="213" alt="image" src="https://github.com/user-attachments/assets/8e825430-5714-460e-8595-7a82cc9b5633" />  
