@@ -356,7 +356,7 @@ f_deploy() {
 # --- Output (start actions)---
 clear
 
-сonfig_found
+# сonfig_found
 
 # check_and_install
 status_detection
