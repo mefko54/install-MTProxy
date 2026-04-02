@@ -249,7 +249,7 @@ status_detection() {
         TOGGLE_ACTION="Not installed"
         EXISTING_LINK="" # In this case, the link is truly not needed
     fi
-    local inst_date=""; [ -f ".install_date" ] && inst_date=" (Installed: $(cat .install_date))"
+    local inst_date=""; [ -f ".install_date" ] && inst_date=" ($(cat .install_date))"
     DOCKER_INFO="\nSTATUS:  Installed [${INST_ICON}] $inst_date  |  Active [${ACT_ICON}]"
 }
 
