@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Install Telemt proxy server (MTProxy) via Docker Distroless
-# telemt-from-image-mu.sh
+# telemt-from-image-mu-sp-rew.sh
 # Changelog: ip4, random url, ask +,  #9), #ad_tag, multi user
 
 # Check for root privileges
@@ -219,9 +219,10 @@ check_and_install() {
 status_detection() {
     # 1. Check for the existence of the link file BEFORE checking Docker
     if [ -f "$PROXY_LINK_FILE" ]; then
-        local raw_link=$(head -n 1 "$PROXY_LINK_FILE" | sed 's/.*tg:\/\//tg:\/\//')
+        local raw_link=$(head -n 1 "$PROXY_LINK_FILE" | sed 's/.*tg:\/\//tg:\/\//')        
         #EXISTING_LINK="LINK:${GREEN}$raw_link${NC}"
-        EXISTING_LINK="LINK: ${GREEN}$raw_link${NC}\n additional user links (if they exist) are in $PROXY_LINK_FILE"
+        EXISTING_LINK="\n LINK: ${GREEN}$raw_link${NC}\nadditional user links (if they exist) are in $PROXY_LINK_FILE"
+        
     else
         #EXISTING_LINK="${YELLOW}⚠️ File proxy_link.txt not found (Install first)${NC}"
         EXISTING_LINK="${YELLOW}⚠️ File $PROXY_LINK_FILE not found (Install first)${NC}"
@@ -249,7 +250,8 @@ status_detection() {
         TOGGLE_ACTION="Not installed"
         EXISTING_LINK="" # In this case, the link is truly not needed
     fi
-    DOCKER_INFO="\nSTATUS:  Installed [${INST_ICON}]  |  Active [${ACT_ICON}]"
+    local inst_date=""; [ -f ".install_date" ] && inst_date="Last setup date: $(cat .install_date)"
+    DOCKER_INFO="\n CURRENT STATUS\n$inst_date\nConfig files [${INST_ICON}] |  Active [${ACT_ICON}]"
 }
 
 gui_top() {
@@ -512,6 +514,7 @@ EOF
 # --- Execution ---
 # deploy_container && { echo -e "\n🎉 Proxy is ready to use!"; }
 deploy_container && { info "🎉 Proxy is ready to use!"; }
+[ ! -f ".install_date" ] && date +"%Y-%m-%d" > .install_date
 # --- Status ---
 is_running && print_proxy_link "$PORT" "$SECRET" || info "Status: Stopped. Use Option 3 later."
 
