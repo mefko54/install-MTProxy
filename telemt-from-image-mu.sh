@@ -356,9 +356,17 @@ fi
 if [ "$OVERWRITE" = false ]; then
     # Start a loop to ensure the selected port is actually available
     while true; do
-    # read -p "[?] Enter port (default $PORT): " input_port
-    ask "Enter port (default $PORT): "; read -r input_port
+        # read -p "[?] Enter port (default $PORT): " input_port
+        ask "Enter port (default $PORT): "; read -r input_port
         PORT=${input_port:-$PORT}
+    
+        # Check if port is privileged (<1024) and script is NOT running as root
+        if [ "$PORT" -lt 1024 ] && [ "$EUID" -ne 0 ]; then
+            warn "Port $PORT is privileged (needs root). Cannot verify if occupied."
+            echo -e "${YELLOW}⚠️  Please check manually or use port > 1024${NC}"
+            continue 
+        fi
+    
         if lsof -i :"$PORT" -sTCP:LISTEN -t >/dev/null ; then
             warn "Port $PORT is already occupied!"
             lsof -i :"$PORT" -sTCP:LISTEN
